@@ -1,0 +1,22 @@
+{
+  "name": "gentle-reminder-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Moishe/gentle-reminder-bot.git"
+  },
+  "author": "Moishe Lettvin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Moishe/gentle-reminder-bot/issues"
+  },
+  "homepage": "https://github.com/Moishe/gentle-reminder-bot#readme",
+  "dependencies": {
+    "@slack/client": "^3.14.1"
+  }
+}
