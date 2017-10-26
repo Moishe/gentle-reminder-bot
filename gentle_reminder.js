@@ -7,9 +7,31 @@ const proxy = require('express-http-proxy');
 const bodyParser = require('body-parser');
 const _ = require('lodash');
 
+function connect_db(){
+  const { Client } = require('pg');
+
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true,
+  });
+
+  client.connect();
+
+  client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
+    if (err) throw err;
+    for (let row of res.rows) {
+      console.log(JSON.stringify(row));
+    }
+    client.end();
+  });  
+};
+
+connect_db();
+
 var http_port = process.env.PORT || '8080';
-var bot_name = process.env.BOT_NAME ||'catbot';
-var slackToken = process.env.SLACK_API_TOKEN;
+var bot_name = process.env.BOT_NAME ||'gentle-reminder';
+var slackRtmToken = process.env.SLACK_RTM_TOKEN;
+var slackWebToken = process.env.SLACK_WEB_TOKEN;
 var slackClient = require('@slack/client');
 
 var app = express();
@@ -36,23 +58,25 @@ app.listen(http_port, function(err) {
 
   var gentleReminder = new GentleReminder();
 
-  gentleReminder.init(slackClient, slackToken);
+  gentleReminder.init(slackClient, slackRtmToken, slackWebToken);
   gentleReminder.start();
 });
 
 function GentleReminder() {
   this.slackClient = undefined;
-  this.token = undefined;
+  this.rtmToken = undefined;
+  this.webToken = undefined;
   this.rtm = undefined;
 }
 
-GentleReminder.prototype.init = function(slackClient, token){
+GentleReminder.prototype.init = function(slackClient, rtmToken, webToken){
   console.log("initializing.");
   this.slackClient = slackClient;
-  this.token = token;
+  this.rtmToken = rtmToken;
+  this.webToken = webToken;
 
-  this.rtm = new this.slackClient.RtmClient(this.token, { logLevel: 'warning' });
-  this.web = new this.slackClient.WebClient(this.token, { logLevel: 'warning' });
+  this.rtm = new this.slackClient.RtmClient(this.rtmToken, { logLevel: 'warning' });
+  this.web = new this.slackClient.WebClient(this.webToken, { logLevel: 'warning' });
 
   console.log(this.slackClient.CLIENT_EVENTS.RTM);
 
