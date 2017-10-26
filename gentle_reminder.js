@@ -90,8 +90,6 @@ GentleReminder.prototype.init = function(slackClient, rtmToken, webToken){
   this.rtm = new this.slackClient.RtmClient(this.rtmToken, { logLevel: 'warning' });
   this.web = new this.slackClient.WebClient(this.webToken, { logLevel: 'warning' });
 
-  console.log(this.slackClient.CLIENT_EVENTS.RTM);
-
   this.rtm.on(this.slackClient.CLIENT_EVENTS.RTM.CONNECTING, function() {
     console.log('connecting');
   });
