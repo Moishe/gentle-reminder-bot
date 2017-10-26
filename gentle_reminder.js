@@ -169,7 +169,7 @@ GentleReminder.prototype.start = function() {
 GentleReminder.prototype.replace = function(payload) {
   console.log("replacing: " + payload);
 
-  self.web_user.chat.update(payload.callback_id, payload.channel.id, payload.actions[0].value, {}, (err, info) => {
+  this.web_user.chat.update(payload.callback_id, payload.channel.id, payload.actions[0].value, {}, (err, info) => {
     console.log('err: ' + err);
     console.log('info: ' + info);
   });
