@@ -17,13 +17,19 @@ function connect_db(){
 
   client.connect();
 
-  client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
+  var create_table_query = `
+    CREATE TABLE IF NOT EXISTS team_tokens (
+      team_id VARCHAR(64) NOT NULL,
+      token VARCHAR(1024) NOT NULL
+    );
+  `;
+  
+  client.query(create_table_query, (err, res) => {
     if (err) throw err;
     for (let row of res.rows) {
       console.log(JSON.stringify(row));
     }
-    client.end();
-  });  
+  });
 };
 
 connect_db();
