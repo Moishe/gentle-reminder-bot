@@ -128,7 +128,7 @@ GentleReminder.prototype.init = function(slackClient, rtmToken, webToken){
 
   this.matches = [
     {
-      regex: /guys/,
+      regex: /guys/gi,
       alert: "'Guys' isn't gender neutral, so if you're referring to a group of men and women, consider using something else.",
       replacements: ["y'all", "comrades", "folks"],
     },
@@ -155,7 +155,8 @@ GentleReminder.prototype.start = function() {
           }];
 
           for (let replacement of match.replacements){
-            attachments[0].actions.push({name: 'replacement', text: replacement, type: 'button', value: replacement});
+            var newString = m.text.replace(match.regex, replacement);
+            attachments[0].actions.push({name: 'replacement', text: replacement, type: 'button', value: newString});
           }
           console.log(attachments);
           self.web.chat.postEphemeral(m.channel, match.alert, m.user, { attachments: attachments });
@@ -167,7 +168,7 @@ GentleReminder.prototype.start = function() {
 };
 
 GentleReminder.prototype.replace = function(payload) {
-  console.log("replacing: " + payload);
+  console.log("replacing: " + payload.actions[0].value);
 
   this.web_user.chat.update(payload.callback_id, payload.channel.id, payload.actions[0].value, {}, (err, info) => {
     console.log('err: ' + err);
