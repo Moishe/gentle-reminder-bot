@@ -64,7 +64,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', function(req, res) { res.send('\n 😻😻 ' + bot_name + ' 😻😻 \n'); });
 app.post('/interactive', function(req, res) {
-  console.log(req);
+  console.log(req.body.payload);
   res.send('\n groovy \n');
 });
 app.use(express.static(__dirname + '/assets'));
