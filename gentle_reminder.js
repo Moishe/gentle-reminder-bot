@@ -64,7 +64,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', function(req, res) { res.send('\n 😻😻 ' + bot_name + ' 😻😻 \n'); });
 app.post('/interactive', function(req, res) {
-  console.log(req.body.payload);
+  payload = JSON.parse(req.body.payload);
+  console.log(payload);
   res.send('\n groovy \n');
 });
 app.use(express.static(__dirname + '/assets'));
@@ -140,7 +141,7 @@ GentleReminder.prototype.start = function() {
         if (match.regex.exec(m.text)){
           attachments = [{
             text: "Choose a replacement",
-            callback_id: "replacement",
+            callback_id: m.ts,
             color: "#3AA3E3",
             attachment_type: "default",
             actions: [],
