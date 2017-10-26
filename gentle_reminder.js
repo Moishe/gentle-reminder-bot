@@ -41,21 +41,9 @@ app.listen(http_port, function(err) {
 });
 
 function GentleReminder() {
-  console.log("constructing.");
-
   this.slackClient = undefined;
-
   this.token = undefined;
-
   this.rtm = undefined;
-
-  this.commonStorage = undefined;
-  this.userStorage = undefined;
-  this.moduleStorage = undefined;
-
-  this.DEFAULT_MODULE_NAME = 'default';
-
-  console.log("constructed.");
 }
 
 GentleReminder.prototype.init = function(slackClient, token){
@@ -64,6 +52,21 @@ GentleReminder.prototype.init = function(slackClient, token){
   this.token = token;
 
   this.rtm = new this.slackClient.RtmClient(this.token, { logLevel: 'warning' });
+  this.web = new this.slackClient.WebClient(this.token, { logLevel: 'warning' });
+
+  console.log(this.slackClient.CLIENT_EVENTS.RTM);
+
+  this.rtm.on(this.slackClient.CLIENT_EVENTS.RTM.CONNECTING, (data) => {
+    console.log('connecting: ' + data);
+  });
+
+  this.rtm.on(this.slackClient.CLIENT_EVENTS.RTM.UNABLE_TO_RTM_START, (data) => {
+    console.log('unable: ' + data);
+  });
+
+  this.rtm.on(this.slackClient.CLIENT_EVENTS.RTM.RAW_MESSAGE, (data) => {
+    console.log('raw: ' + data);
+  });
 
   this.rtm.on(this.slackClient.CLIENT_EVENTS.RTM.AUTHENTICATED, (rtmStartData) => {
     for (const c of rtmStartData.channels) {
@@ -84,7 +87,19 @@ GentleReminder.prototype.start = function() {
 
   var self = this;
   this.rtm.on(this.slackClient.RTM_EVENTS.MESSAGE, function(m) {
-    console.log(m);
+    if (m.type == 'message'){
+        match = /guys/.exec(m.text);
+        if (match){
+          self.web.chat.postEphemeral(m.channel, "Yo", m.user, { as_user: true }, function(err, info){
+            console.log(err);
+            console.log(info);
+          });
+          self.web.chat.update(m.ts, m.channel, "edited", { as_user: true }, function(err, info){
+            console.log(err);
+            console.log(info);
+          });
+        }
+    }
   });
   this.rtm.on(this.slackClient.RTM_EVENTS.REACTION_ADDED, function handleRtmReactionAdded(reaction) {
     // TODO
