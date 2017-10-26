@@ -63,11 +63,20 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', function(req, res) { res.send('\n 😻😻 ' + bot_name + ' 😻😻 \n'); });
+
+var gentleReminder = new GentleReminder();
+
 app.post('/interactive', function(req, res) {
   payload = JSON.parse(req.body.payload);
-  console.log(payload);
+  gentleReminder.replace(payload);
   res.send('\n groovy \n');
 });
+app.get('/interactive', function(req, res) {
+  payload = JSON.parse(req.body.payload);
+  gentleReminder.replace(payload);
+  res.send('\n groovy \n');
+});
+
 app.use(express.static(__dirname + '/assets'));
 
 
@@ -77,8 +86,6 @@ app.listen(http_port, function(err) {
   }
 
   console.log('Listening on ' + http_port);
-
-  var gentleReminder = new GentleReminder();
 
   gentleReminder.init(slackClient, slackRtmToken, slackWebToken);
   gentleReminder.start();
@@ -99,7 +106,7 @@ GentleReminder.prototype.init = function(slackClient, rtmToken, webToken){
 
   this.rtm = new this.slackClient.RtmClient(this.rtmToken, { logLevel: 'warning' });
   this.web = new this.slackClient.WebClient(this.rtmToken, { logLevel: 'warning' });
-  // this.web = new this.slackClient.WebClient(this.webToken, { logLevel: 'warning' });
+  this.web_user = new this.slackClient.WebClient(this.webToken, { logLevel: 'warning' });
 
   this.rtm.on(this.slackClient.CLIENT_EVENTS.RTM.CONNECTING, function() {
     console.log('connecting');
@@ -157,4 +164,13 @@ GentleReminder.prototype.start = function() {
     }
   });
   console.log("started");
+};
+
+GentleReminder.prototype.replace = function(payload) {
+  console.log("replacing: " + payload);
+
+  self.web_user.chat.update(payload.callback_id, payload.channel.id, payload.actions[0].value, {}, (err, info) => {
+    console.log('err: ' + err);
+    console.log('info: ' + info);
+  });
 };
