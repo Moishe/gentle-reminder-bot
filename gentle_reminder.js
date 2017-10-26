@@ -27,6 +27,11 @@ function connect_db(){
       user_id VARCHAR(64) NOT NULL,
       token VARCHAR(1024) NOT NULL
     );`,
+    `CREATE TABLE IF NOT EXISTS substitutions (
+      team_id VARCHAR(64) NOT NULL,
+      regex_match VARCHAR(128) NOT NULL,
+      replace VARCHAR(128) NOT NULL
+    );`,
   ];
 
   for (let create_table_query of create_table_queries){
@@ -57,7 +62,8 @@ if (process.env.PROXY_URI) {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/', function(req, res) { res.send('\n 😻😻 ' + bot_name + ' 😻😻 \n') });
+app.get('/', function(req, res) { res.send('\n 😻😻 ' + bot_name + ' 😻😻 \n'); });
+app.get('/interactive', function(req, res) { res.send('\n groovy \n'); });
 app.use(express.static(__dirname + '/assets'));
 
 
@@ -88,7 +94,8 @@ GentleReminder.prototype.init = function(slackClient, rtmToken, webToken){
   this.webToken = webToken;
 
   this.rtm = new this.slackClient.RtmClient(this.rtmToken, { logLevel: 'warning' });
-  this.web = new this.slackClient.WebClient(this.webToken, { logLevel: 'warning' });
+  this.web = new this.slackClient.WebClient(this.rtmToken, { logLevel: 'warning' });
+  // this.web = new this.slackClient.WebClient(this.webToken, { logLevel: 'warning' });
 
   this.rtm.on(this.slackClient.CLIENT_EVENTS.RTM.CONNECTING, function() {
     console.log('connecting');
@@ -108,6 +115,14 @@ GentleReminder.prototype.init = function(slackClient, rtmToken, webToken){
   this.channelRe = /#.*/;
   this.userRe = /<@[UW][A-Za-z0-9]+>/;
 
+  this.matches = [
+    {
+      regex: /guys/,
+      alert: "'Guys' isn't gender neutral, so if you're referring to a group of men and women, consider using something else.",
+      replacements: ["y'all", "comrades", "folks"],
+    },
+  ];
+
   console.log("initialized.");
 };
 
@@ -118,25 +133,24 @@ GentleReminder.prototype.start = function() {
   var self = this;
   this.rtm.on(this.slackClient.RTM_EVENTS.MESSAGE, function(m) {
     if (m.type == 'message'){
-        match = /guys/.exec(m.text);
-        if (match){
-          self.web.chat.postEphemeral(m.channel, "Yo", m.user, { as_user: true }, function(err, info){
-            console.log(err);
-            console.log(info);
-          });
-          self.web.chat.update(m.ts, m.channel, "edited", { as_user: true }, function(err, info){
-            console.log(err);
-            console.log(info);
-          });
-        }
-    }
-  });
-  this.rtm.on(this.slackClient.RTM_EVENTS.REACTION_ADDED, function handleRtmReactionAdded(reaction) {
-    // TODO
-  });
+      for (let match of self.matches){
+        if (match.regex.exec(m.text)){
+          attachments = [{
+            text: "Choose a replacement",
+            callback_id: "replacement",
+            color: "#3AA3E3",
+            attachment_type: "default",
+            actions: [],
+          }];
 
-  this.rtm.on(this.slackClient.RTM_EVENTS.REACTION_REMOVED, function handleRtmReactionRemoved(reaction) {
-    // TODO
+          for (let replacement of match.replacements){
+            attachments[0].actions.push({name: 'replacement', text: replacement, type: 'button', value: replacement});
+          }
+          console.log(attachments);
+          self.web.chat.postEphemeral(m.channel, match.alert, m.user, { attachments: attachments });
+        }
+      }
+    }
   });
   console.log("started");
 };
