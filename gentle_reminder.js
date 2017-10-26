@@ -17,19 +17,25 @@ function connect_db(){
 
   client.connect();
 
-  var create_table_query = `
-    CREATE TABLE IF NOT EXISTS team_tokens (
+  var create_table_queries = [
+    `CREATE TABLE IF NOT EXISTS rtm_tokens (
       team_id VARCHAR(64) NOT NULL,
       token VARCHAR(1024) NOT NULL
-    );
-  `;
-  
-  client.query(create_table_query, (err, res) => {
-    if (err) throw err;
-    for (let row of res.rows) {
-      console.log(JSON.stringify(row));
-    }
-  });
+    );`,
+    `CREATE TABLE IF NOT EXISTS web_tokens (
+      team_id VARCHAR(64) NOT NULL,
+      user_id VARCHAR(64) NOT NULL,
+      token VARCHAR(1024) NOT NULL
+    );`,
+  ];
+
+  for (let create_table_query of create_table_queries){
+    client.query(create_table_query, (err, res) => {
+      if (err) throw err;
+      console.log(res);
+    });
+  }
+
 };
 
 connect_db();
@@ -86,23 +92,19 @@ GentleReminder.prototype.init = function(slackClient, rtmToken, webToken){
 
   console.log(this.slackClient.CLIENT_EVENTS.RTM);
 
-  this.rtm.on(this.slackClient.CLIENT_EVENTS.RTM.CONNECTING, (data) => {
-    console.log('connecting: ' + data);
+  this.rtm.on(this.slackClient.CLIENT_EVENTS.RTM.CONNECTING, function() {
+    console.log('connecting');
   });
 
   this.rtm.on(this.slackClient.CLIENT_EVENTS.RTM.UNABLE_TO_RTM_START, (data) => {
-    console.log('unable: ' + data);
-  });
-
-  this.rtm.on(this.slackClient.CLIENT_EVENTS.RTM.RAW_MESSAGE, (data) => {
-    console.log('raw: ' + data);
+    console.log('unable to rtm.start: ' + data);
   });
 
   this.rtm.on(this.slackClient.CLIENT_EVENTS.RTM.AUTHENTICATED, (rtmStartData) => {
+    console.log(`Logged in as ${rtmStartData.self.name} of team ${rtmStartData.team.name}`);
     for (const c of rtmStartData.channels) {
-      if (c.is_member && c.name ==='general') { channel = c.id }
+      console.log('  joined channel ' + c.name);
     }
-    console.log(`Logged in as ${rtmStartData.self.name} of team ${rtmStartData.team.name}, but not yet connected to a channel`);
   });
 
   this.channelRe = /#.*/;
