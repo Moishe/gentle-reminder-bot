@@ -164,8 +164,7 @@ GentleReminder.prototype.start = function() {
 };
 
 GentleReminder.prototype.replace = function(payload) {
-  console.log(JSON.stringify(payload.actions[0]));
-  if (payload.actions[0].name != 'ignore'){
+  if (payload.actions[0].name == 'ignore'){
     return "Okay, ignored.";
   }
   this.web_user.chat.update(payload.callback_id, payload.channel.id, payload.actions[0].value, {}, (err, info) => {
