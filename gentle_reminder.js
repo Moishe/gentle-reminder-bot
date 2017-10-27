@@ -168,10 +168,9 @@ GentleReminder.prototype.start = function() {
 };
 
 GentleReminder.prototype.replace = function(payload) {
-  console.log("replacing: " + payload.actions[0].value);
-
   this.web_user.chat.update(payload.callback_id, payload.channel.id, payload.actions[0].value, {}, (err, info) => {
-    console.log('err: ' + err);
-    console.log('info: ' + info);
+    if (err){
+      console.log('An error occurred while updating: ' + err);
+    }
   });
 };
