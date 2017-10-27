@@ -2,39 +2,38 @@ function DB() {
   this.client = undefined;
 }
 
-DB.prototype.init = function() {
+DB.prototype.init = function(databaseUrl) {
   const { Client } = require('pg');
 
   this.client = new Client({
-    connectionString: process.env.DATABASE_URL,
+    connectionString: databaseUrl,
     ssl: true,
   });
 
   this.client.connect();
+};
 
-  var create_table_queries = [
-    `CREATE TABLE IF NOT EXISTS rtm_tokens (
-      team_id VARCHAR(64) NOT NULL,
-      token VARCHAR(1024) NOT NULL
-    );`,
-    `CREATE TABLE IF NOT EXISTS web_tokens (
-      team_id VARCHAR(64) NOT NULL,
-      user_id VARCHAR(64) NOT NULL,
-      token VARCHAR(1024) NOT NULL
-    );`,
-    `CREATE TABLE IF NOT EXISTS substitutions (
-      team_id VARCHAR(64) NOT NULL,
-      regex_match VARCHAR(128) NOT NULL,
-      replace VARCHAR(128) NOT NULL
-    );`,
-  ];
+DB.prototype.getBotTokens = function() {
+  console.log('getting bot tokens');
+  self = this;
+  return new Promise(function(resolve, reject) {
+    self.client.query('SELECT team_id, token FROM bot_tokens', (err, res) => {
+      if (err) {
+        reject(err);
+        return;
+      }
 
-  for (let create_table_query of create_table_queries){
-    this.client.query(create_table_query, (err, res) => {
-      if (err) throw err;
-      console.log(res);
+      resolve(res.rows);
     });
-  }
+  });
+
+};
+
+DB.prototype.getUserTokensForTeam = function(team_id) {
+
+};
+
+DB.prototype.getSubstitutions = function(team_id, user_id) {
 };
 
 exports.DB = DB;

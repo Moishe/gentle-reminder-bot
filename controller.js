@@ -5,8 +5,11 @@ function Controller() {
   this.rtm = undefined;
 }
 
-Controller.prototype.init = function(slackClient, rtmToken, webToken){
+Controller.prototype.init = function(slackClient, rtmToken, webToken, db){
   console.log("initializing.");
+
+  db.getBotTokens().then(console.log);
+
   this.slackClient = slackClient;
   this.rtmToken = rtmToken;
   this.webToken = webToken;
@@ -50,6 +53,7 @@ Controller.prototype.start = function() {
 
   var self = this;
   this.rtm.on(this.slackClient.RTM_EVENTS.MESSAGE, function(m) {
+    console.log(m);
     if (m.type == 'message'){
       for (let match of self.matches){
         if (match.regex.exec(m.text)){
