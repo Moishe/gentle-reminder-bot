@@ -68,13 +68,8 @@ var gentleReminder = new GentleReminder();
 
 app.post('/interactive', function(req, res) {
   payload = JSON.parse(req.body.payload);
-  gentleReminder.replace(payload);
-  res.send('\n groovy \n');
-});
-app.get('/interactive', function(req, res) {
-  payload = JSON.parse(req.body.payload);
-  gentleReminder.replace(payload);
-  res.send('\n groovy \n');
+  response = gentleReminder.replace(payload);
+  res.send(response);
 });
 
 app.use(express.static(__dirname + '/assets'));
@@ -158,6 +153,7 @@ GentleReminder.prototype.start = function() {
             var newString = m.text.replace(match.regex, replacement);
             attachments[0].actions.push({name: 'replacement', text: replacement, type: 'button', value: newString});
           }
+          attachments[0].actions.push({name: 'ignore', text: 'Ignore', type: 'button', value: 0, style: 'danger'});
           console.log(attachments);
           self.web.chat.postEphemeral(m.channel, match.alert, m.user, { attachments: attachments });
         }
@@ -168,9 +164,13 @@ GentleReminder.prototype.start = function() {
 };
 
 GentleReminder.prototype.replace = function(payload) {
+  if (!payload.actions[0].value){
+    return "Okay, ignored.";
+  }
   this.web_user.chat.update(payload.callback_id, payload.channel.id, payload.actions[0].value, {}, (err, info) => {
     if (err){
       console.log('An error occurred while updating: ' + err);
     }
   });
+  return "Thank you! Replaced.";
 };
