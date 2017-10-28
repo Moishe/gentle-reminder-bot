@@ -44,12 +44,12 @@ Controller.prototype.replace = function(payload) {
     return "Okay, ignored.";
   }
 
-  [team_id, user_id, ts] = payload.callback_id.split("-");
+  var [team_id, user_id, ts] = payload.callback_id.split("-");
 
   console.log(sprintf("Would replace with '%s' on team %s, user %s and ts %s", payload.actions[0].value, team_id, user_id, ts));
 
   if (team_id in this.teamControllers){
-    this.teamControllers[team_id].replace(user, payload.channel.id, ts, payload.actions[0].value);
+    this.teamControllers[team_id].replace(user_id, payload.channel.id, ts, payload.actions[0].value);
   }else{
     console.log('Team not found in team controllers');
   }
