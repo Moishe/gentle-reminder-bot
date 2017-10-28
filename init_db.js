@@ -66,19 +66,31 @@ client.query(
         }
 });
 
-/*    `CREATE TABLE IF NOT EXISTS substitutions (
+client.query(
+    `CREATE TABLE IF NOT EXISTS substitutions (
         id serial PRIMARY KEY,
         team_id VARCHAR(64) NOT NULL,
         regex_match VARCHAR(128) NOT NULL,
-        replace VARCHAR(128) NOT NULL
+        alert VARCHAR(1024) NOT NULL,
+        replacements VARCHAR(1024) NOT NULL
     );`,
-];
-
-for (let create_table_query of create_table_queries) {
-    client.query(create_table_query, (err, res) => {
+    (err, res) => {
         if (err) throw err;
         console.log(res);
-    });
-}
-*/
-// add the default bot token
+
+        if (team_id && user_token) {
+            var delete_query = sprintf("DELETE FROM substitutions WHERE team_id='%s';", team_id);
+
+            client.query(delete_query, (err, res) => {
+                if (err) throw err;
+                console.log(res);
+
+                var insert_query = sprintf("INSERT INTO substitutions(team_id, regex_match, alert, replacements) VALUES('%s', 'guys', '\"Guys\" isn''t gender neutral, so if you''re referring to a group of men and women, consider using something else.', 'y''all,comrades,folks');", team_id);
+                console.log('insert: ' + insert_query);
+                client.query(insert_query, (err, res) => {
+                    if (err) throw err;
+                    console.log(res);
+                });
+            });
+        }
+});

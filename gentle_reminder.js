@@ -12,8 +12,6 @@ const DB = require('./db.js');
 
 var http_port = process.env.PORT || '8080';
 var bot_name = process.env.BOT_NAME ||'gentle-reminder';
-var slackRtmToken = process.env.SLACK_RTM_TOKEN;
-var slackWebToken = process.env.SLACK_WEB_TOKEN;
 var databaseUrl = process.env.DATABASE_URL;
 var slackClient = require('@slack/client');
 
@@ -51,6 +49,5 @@ app.listen(http_port, function(err) {
 
   db.init(databaseUrl);
 
-  controller.init(slackClient, slackRtmToken, slackWebToken, db);
-  controller.start();
+  controller.init(slackClient, db).then(function() { console.log(controller); controller.start(); });
 });
