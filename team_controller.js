@@ -79,7 +79,7 @@ TeamController.prototype.handleMessage = function(m) {
             attachments = [
                 {
                     text: "Choose a replacement",
-                    callback_id: m.ts,
+                    callback_id: sprintf("%s-%s-%s", m.team_id, m.user_id, m.ts),
                     color: "#3AA3E3",
                     attachment_type: "default",
                     actions: [],
