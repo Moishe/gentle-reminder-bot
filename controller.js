@@ -44,15 +44,16 @@ Controller.prototype.replace = function(payload) {
     return "Okay, ignored.";
   }
 
-  [team, user, ts] = payload.callback_id.split("-");
+  [team_id, user_id, ts] = payload.callback_id.split("-");
 
-  console.log(sprintf("Would replace with '%s' on team %s, user %s and ts %s", payload.actions[0].value, team, user, ts));
-  return;
-  this.web_user.chat.update(payload.callback_id, payload.channel.id, payload.actions[0].value, {}, (err, info) => {
-    if (err){
-      console.log('An error occurred while updating: ' + err);
-    }
-  });
+  console.log(sprintf("Would replace with '%s' on team %s, user %s and ts %s", payload.actions[0].value, team_id, user_id, ts));
+
+  if (team in this.teamControllers){
+    this.teamControllers[team].replace(user, payload.channel.id, ts, payload.actions[0].value);
+  }else{
+    console.log('Team not found in team controllers');
+  }
+
   return "Thank you! Replaced.";
 };
 
