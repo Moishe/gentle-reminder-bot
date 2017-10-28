@@ -46,10 +46,10 @@ DB.prototype.getUserTokensForTeam = function(team_id) {
   });
 };
 
-DB.prototype.getSubstitutions = function(team_id, user_id) {
+DB.prototype.getSubstitutions = function(team_id) {
   var self = this;
   return new Promise(function(resolve, reject) {
-    query = self.sprintf("SELECT team_id, regex_match, replacements FROM user_tokens WHERE team_id='%s';", team_id);
+    query = self.sprintf("SELECT team_id, regex_match, replacements FROM substitutions WHERE team_id='%s';", team_id);
     self.client.query(query, (err, res) => {
       if (err) {
         reject(err);

@@ -12,6 +12,9 @@ Controller.prototype.init = function(slackClient, db){
   this.slackClient = slackClient;
   this.db = db;
 
+  // Get all the teams that this app is associated with, and create and initialize
+  // team controllers for each of them.
+
   var self = this;
   return new Promise(function(resolve, reject) {
     db.getBotTokens().then(function(res) {
@@ -19,7 +22,7 @@ Controller.prototype.init = function(slackClient, db){
         tc = new TeamController.TeamController();
         return sequence.then(function(){
           self.teamControllers[row['team_id']] = tc;
-          return tc.init(self.slackClient, row['team_id'], row['token'], res);
+          return tc.init(self.slackClient, row['team_id'], row['token'], db);
         })
       }, Promise.resolve());
     }).then(function(){ resolve(); });
