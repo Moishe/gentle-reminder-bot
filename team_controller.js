@@ -20,19 +20,15 @@ TeamController.prototype.init = function(slackClient, team_id, bot_token, db) {
 
     var self = this;
     return new Promise(function(resolve, reject) {
-        console.log(1);
         self.db.getSubstitutions(self.team_id).then(function(res) {
-            console.log(2);
             self.matches = res;
         }).then(function(){
-            console.log(3);
             return self.db.getUserTokensForTeam(self.team_id).then(function(res) {
-                console.log(4, res);
                 for (let user of res){
                     self.users[user['user_id']] = user;
                 }
-            }).then(function() { console.log('hmm'); resolve(); });
-        }).then(function() { console.log('users: ', self.users); resolve(); });
+            }).then(function() { resolve(); });
+        }).then(function() { resolve(); });
     });
 };
 
