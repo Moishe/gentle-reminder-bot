@@ -1,4 +1,4 @@
-sprintf = require("sprintf-js").sprintf;
+var sprintf = require("sprintf-js").sprintf;
 
 function TeamController() {
     this.slackClient = undefined;

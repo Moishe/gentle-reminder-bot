@@ -1,3 +1,5 @@
+var sprintf = require("sprintf-js").sprintf;
+
 var TeamController = require('./team_controller.js');
 
 function Controller() {
@@ -41,6 +43,11 @@ Controller.prototype.replace = function(payload) {
   if (payload.actions[0].name == 'ignore'){
     return "Okay, ignored.";
   }
+
+  [team, user, ts] = payload.callback_id.split(",");
+
+  console.log(sprintf("Would replace with '%s' on team %s, user %s and ts %s", payload.actions[0].value, team, user, ts));
+  return;
   this.web_user.chat.update(payload.callback_id, payload.channel.id, payload.actions[0].value, {}, (err, info) => {
     if (err){
       console.log('An error occurred while updating: ' + err);
