@@ -49,5 +49,5 @@ app.listen(http_port, function(err) {
 
   db.init(databaseUrl);
 
-  controller.init(slackClient, db).then(function() { console.log(controller); controller.start(); });
+  controller.init(slackClient, db).then(function() { controller.start(); });
 });

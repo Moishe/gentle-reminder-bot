@@ -15,14 +15,14 @@ Controller.prototype.init = function(slackClient, db){
   var self = this;
   return new Promise(function(resolve, reject) {
     db.getBotTokens().then(function(res) {
-       for (let row of res){
-        db.getUserTokensForTeam(row['team_id']).then(function(res){
-          tc = new TeamController.TeamController();
-          tc.init(self.slackClient, row['team_id'], row['token'], res);
+      return res.reduce(function(sequence, row){
+        tc = new TeamController.TeamController();
+        return sequence.then(function(){
           self.teamControllers[row['team_id']] = tc;
-        }).then(function(){ console.log(self.teamControllers); resolve(); });
-      }
-    });
+          return tc.init(self.slackClient, row['team_id'], row['token'], res);
+        })
+      }, Promise.resolve());
+    }).then(function(){ resolve(); });
   });
 };
 

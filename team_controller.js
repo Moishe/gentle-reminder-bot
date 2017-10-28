@@ -2,6 +2,10 @@ sprintf = require("sprintf-js").sprintf;
 
 function TeamController() {
     this.slackClient = undefined;
+    this.matches = undefined;
+    this.team_id = undefined;
+    this.bot_token = undefined;
+    this.users = undefined;
 }
 
 TeamController.prototype.init = function(slackClient, team_id, bot_token, users) {
