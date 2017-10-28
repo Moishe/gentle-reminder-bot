@@ -53,11 +53,7 @@ TeamController.prototype.start = function() {
     });
 
     var self = this;
-    this.rtm.on(this.slackClient.RTM_EVENTS.MESSAGE, function(m) {
-        if (m.type == 'message') {
-            self.handleMessage(m);
-        }
-    });
+    this.rtm.on(this.slackClient.RTM_EVENTS.MESSAGE, function(m) { self.handleMessage(m); });
 
     this.rtm.start();
 
@@ -65,6 +61,16 @@ TeamController.prototype.start = function() {
 };
 
 TeamController.prototype.handleMessage = function(m) {
+
+    if (m.type != 'message') {
+        return;
+    }
+
+    if (!(m.user in this.users)) {
+        return;
+    }
+
+    /*
     for (let match of this.matches) {
         if (match.regex.exec(m.text)) {
             attachments = [
@@ -86,6 +92,7 @@ TeamController.prototype.handleMessage = function(m) {
             this.web.chat.postEphemeral(m.channel, match.alert, m.user, { attachments: attachments });
         }
     }
+    */
 };
 
 exports.TeamController = TeamController;
