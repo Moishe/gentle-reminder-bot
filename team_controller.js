@@ -99,7 +99,7 @@ TeamController.prototype.handleMessage = function(m) {
 TeamController.prototype.replace = function(user_id, channel_id, ts, replacement) {
     console.log("user: ", this.users[user_id]);
     var web_user = new this.slackClient.WebClient(this.users[user_id].token, { logLevel: 'warning' });
-    web_user.chat.update(payload.callback_id, , replacement, {}, (err, info) => {
+    web_user.chat.update(ts, channel_id, replacement, {}, (err, info) => {
         if (err){
             console.log('An error occurred while updating: ' + err);
         }
