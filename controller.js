@@ -44,7 +44,7 @@ Controller.prototype.replace = function(payload) {
     return "Okay, ignored.";
   }
 
-  [team, user, ts] = payload.callback_id.split(",");
+  [team, user, ts] = payload.callback_id.split("-");
 
   console.log(sprintf("Would replace with '%s' on team %s, user %s and ts %s", payload.actions[0].value, team, user, ts));
   return;
