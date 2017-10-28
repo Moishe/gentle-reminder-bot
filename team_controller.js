@@ -15,13 +15,21 @@ TeamController.prototype.init = function(slackClient, team_id, bot_token, db) {
     this.bot_token = bot_token;
     this.db = db;
     this.users = {};
+    this.matches = [];
 
     // load all the matchers and users for this team
 
     var self = this;
     return new Promise(function(resolve, reject) {
         self.db.getSubstitutions(self.team_id).then(function(res) {
-            self.matches = res;
+            for (let match of res){
+                self.matches.push(
+                    {
+                        'regex': new RegExp(match['regex_match'], 'gi'),
+                        'alert': match['alert'],
+                        'replacements': match['replacements'].split(",")
+                    });
+            }
         }).then(function(){
             return self.db.getUserTokensForTeam(self.team_id).then(function(res) {
                 for (let user of res){
@@ -66,7 +74,6 @@ TeamController.prototype.handleMessage = function(m) {
         return;
     }
 
-    /*
     for (let match of this.matches) {
         if (match.regex.exec(m.text)) {
             attachments = [
@@ -88,7 +95,6 @@ TeamController.prototype.handleMessage = function(m) {
             this.web.chat.postEphemeral(m.channel, match.alert, m.user, { attachments: attachments });
         }
     }
-    */
 };
 
 exports.TeamController = TeamController;
