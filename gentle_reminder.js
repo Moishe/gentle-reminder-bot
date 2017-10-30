@@ -33,8 +33,12 @@ var controller = new Controller.Controller();
 var db = new DB.DB();
 
 app.post('/interactive', function(req, res) {
-    console.log('payload', req.body.payload);
     payload = JSON.parse(req.body.payload);
+
+    if (payload.token != process.env.VERIFICATION_TOKEN) {
+        console.log('!!! invalid verification token received !!!');
+    }
+
     response = controller.replace(payload);
     res.send(response);
 });
