@@ -125,8 +125,8 @@ TeamController.prototype.replace = function(user_id, channel_id, ts, replacement
     });
 };
 
-TeamController.prototype.generateAuthLinkForUser = function(user){
-    return "https://gentle-reminder.herokuapp.com/requestUserAuth?user=" + user;
+TeamController.prototype.generateAuthLinkForUser = function(team, user){
+    return "https://gentle-reminder.herokuapp.com/requestUserAuth/" + team + "/" + user;
 };
 
 TeamController.prototype.showHelp = function(m, args) {
@@ -151,11 +151,10 @@ TeamController.prototype.showSubscribeLink = function(m, args) {
         return;
     }
 
-    var message = `
-        To receive gentle reminders, please follow this link to authorize the gentle reminder bot to edit messages
-        on your behalf (after providing you an opportunity to choose a replacement, or ignore the suggestion).
-
-        ` + this.generateAuthLinkForUser(m.user);
+    var message =
+        "To receive gentle reminders, please follow this link to authorize the gentle reminder bot to edit messages " +
+        "on your behalf (after providing you an opportunity to choose a replacement, or ignore the suggestion). " +
+        this.generateAuthLinkForUser(m.team, m.user);
 
     this.web.chat.postMessage(m.channel, message);
 };
