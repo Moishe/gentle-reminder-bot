@@ -38,16 +38,23 @@ app.post('/interactive', function(req, res) {
 });
 
 app.get('/requestUserAuth/:team/:user', function(req, res) {
-  console.log("params", req.params);
-  return "okey dokey";
-  /*
-  res.redirect("https://slack.com/oauth/authorize" +
+  // TODO: sanitize this
+
+  var url = "https://slack.com/oauth/authorize" +
     "?client_id=" process.env.CLIENT_ID +
     "&scope=chat:write:user" +
-    "&state=foobar" +
-    "&team=" +
-  */
+    "&redirect_uri=https://gentle-reminder.herokuapp.com/oauth/" + req.params['team'] + "/" + req.params['user'] +
+    "&state=" + req.params['user'] +
+    "&team=" + req.params['team'];
+
+  console.log(url);
+
+  res.redirect(url);
 });
+
+app.get('/oauth/:team/:user'){
+  console.log("oauth: ", req.originalUrl);
+}
 
 app.use(express.static(__dirname + '/assets'));
 
