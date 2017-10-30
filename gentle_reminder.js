@@ -33,6 +33,7 @@ var controller = new Controller.Controller();
 var db = new DB.DB();
 
 app.post('/interactive', function(req, res) {
+    console.log('query', url.parse(req.url).query);
     payload = JSON.parse(req.body.payload);
     response = controller.replace(payload);
     res.send(response);
@@ -53,6 +54,7 @@ app.get('/requestUserAuth/:team/:user', function(req, res) {
 
 app.get('/oauth/:team/:user', function(req, res) {
     var path = url.parse(req.url).pathname;
+    console.log('query', url.parse(req.url).query);
     controller.handleOAuthCallback(req.params['team'], req.params['user'], req.query.code, req.query.state, "https://gentle-reminder.herokuapp.com" + path);
     res.send('ok');
 });
