@@ -19,9 +19,9 @@ var slackClient = require('@slack/client');
 var app = express();
 
 if (process.env.PROXY_URI) {
-  app.use(process.env.PROXY_URI), {
-    forwardPath: function(req, res) { return require('url').parse(req.url).path }
-  }
+    app.use(process.env.PROXY_URI), {
+        forwardPath: function(req, res) { return require('url').parse(req.url).path }
+    }
 }
 
 app.use(bodyParser.json());
@@ -33,43 +33,43 @@ var controller = new Controller.Controller();
 var db = new DB.DB();
 
 app.post('/interactive', function(req, res) {
-  payload = JSON.parse(req.body.payload);
-  response = controller.replace(payload);
-  res.send(response);
+    payload = JSON.parse(req.body.payload);
+    response = controller.replace(payload);
+    res.send(response);
 });
 
 app.get('/requestUserAuth/:team/:user', function(req, res) {
-  // TODO: sanitize this
+    // TODO: sanitize this
 
-  var url = "https://slack.com/oauth/authorize" +
-    "?client_id=" + process.env.CLIENT_ID +
-    "&scope=chat:write:user" +
-    "&redirect_uri=https://gentle-reminder.herokuapp.com/oauth/" + req.params['team'] + "/" + req.params['user'] +
-    "&state=" + req.params['user'] +
-    "&team=" + req.params['team'];
+    var url = "https://slack.com/oauth/authorize" +
+        "?client_id=" + process.env.CLIENT_ID +
+        "&scope=chat:write:user" +
+        "&redirect_uri=https://gentle-reminder.herokuapp.com/oauth/" + req.params['team'] + "/" + req.params['user'] +
+        "&state=" + req.params['user'] +
+        "&team=" + req.params['team'];
 
-  console.log(url);
+    console.log(url);
 
-  res.redirect(url);
+    res.redirect(url);
 });
 
 app.get('/oauth/:team/:user', function(req, res) {
-  var path = url.parse(req.url).pathname;
-  controller.handleOAuthCallback(req.params['team'], req.params['user'], req.query.code, req.query.state, "https://gentle-reminder.herokuapp.com" + path);
-  res.send('ok');
+    var path = url.parse(req.url).pathname;
+    controller.handleOAuthCallback(req.params['team'], req.params['user'], req.query.code, req.query.state, "https://gentle-reminder.herokuapp.com" + path);
+    res.send('ok');
 });
 
 app.use(express.static(__dirname + '/assets'));
 
 
 app.listen(http_port, function(err) {
-  if (err) {
-    throw err;
-  }
+    if (err) {
+        throw err;
+    }
 
-  console.log('Listening on ' + http_port);
+    console.log('Listening on ' + http_port);
 
-  db.init(databaseUrl);
+    db.init(databaseUrl);
 
-  controller.init(slackClient, db).then(function() { controller.start(); });
+    controller.init(slackClient, db).then(function() { controller.start(); });
 });
