@@ -37,7 +37,7 @@ app.post('/interactive', function(req, res) {
   res.send(response);
 });
 
-app.get('/requestUserAuth', function(req, res) {
+app.get('/requestUserAuth/:team/:user', function(req, res) {
   console.log("params", req.params);
   return "okey dokey";
   /*
