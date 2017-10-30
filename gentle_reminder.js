@@ -52,9 +52,9 @@ app.get('/requestUserAuth/:team/:user', function(req, res) {
   res.redirect(url);
 });
 
-app.get('/oauth/:team/:user'){
+app.get('/oauth/:team/:user', function(req, res) {
   console.log("oauth: ", req.originalUrl);
-}
+});
 
 app.use(express.static(__dirname + '/assets'));
 
