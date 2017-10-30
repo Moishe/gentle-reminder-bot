@@ -7,6 +7,12 @@ function TeamController() {
     this.db = undefined;
     this.matches = undefined;
     this.users = undefined;
+
+    this.commands = {
+        'help': TeamController.prototype.showHelp.bind(this),
+        'replacements': TeamController.prototype.showReplacements.bind(this),
+        'subscribe': TeamController.prototype.showSubscribeLink.bind(this),
+    };
 }
 
 TeamController.prototype.init = function(slackClient, team_id, bot_token, db) {
@@ -69,6 +75,12 @@ TeamController.prototype.handleMessage = function(m) {
         return;
     }
 
+    if (m.channel[0] == 'D'){
+        return this.handleDirectMessage(m);
+    }
+
+    console.log('handling message: ', m);
+
     if (!(m.user in this.users)) {
         return;
     }
@@ -96,6 +108,14 @@ TeamController.prototype.handleMessage = function(m) {
     }
 };
 
+TeamController.prototype.handleDirectMessage = function(m){
+    var args = m.text.split(' ');
+    var command = command = args[0].toLowerCase();
+    if (command in this.commands){
+        this.commands[command](m, args);
+    }
+};
+
 TeamController.prototype.replace = function(user_id, channel_id, ts, replacement) {
     var web_user = new this.slackClient.WebClient(this.users[user_id].token, { logLevel: 'warning' });
     web_user.chat.update(ts, channel_id, replacement, {}, (err, info) => {
@@ -103,6 +123,41 @@ TeamController.prototype.replace = function(user_id, channel_id, ts, replacement
             console.log('An error occurred while updating: ' + err);
         }
     });
-}
+};
+
+TeamController.prototype.generateAuthLinkForUser = function(user){
+    return "https://gentle-reminder.herokuapp.com/requestUserAuth?user=" + user;
+};
+
+TeamController.prototype.showHelp = function(m, args) {
+    this.web.chat.postMessage(m.channel, "help!", {});
+};
+
+TeamController.prototype.showReplacements = function(m, args) {
+    var message = '';
+    for (let match of this.matches) {
+        message += sprintf("The regex: *%s* can be replaced with these suggestions: _%s_\n",
+            match.regex, match.replacements.join(', '));
+    }
+
+    this.web.chat.postMessage(m.channel, message);
+};
+
+TeamController.prototype.showSubscribeLink = function(m, args) {
+    console.log(args);
+    console.log('fia', args.includes('force'));
+    if (m.user in this.users && !args.includes('force')) {
+        this.web.chat.postMessage(m.channel, "You're already subscribed to gentle reminders! Thank you ❤️", { parse: 'full' });
+        return;
+    }
+
+    var message = `
+        To receive gentle reminders, please follow this link to authorize the gentle reminder bot to edit messages
+        on your behalf (after providing you an opportunity to choose a replacement, or ignore the suggestion).
+
+        ` + this.generateAuthLinkForUser(m.user);
+
+    this.web.chat.postMessage(m.channel, message);
+};
 
 exports.TeamController = TeamController;

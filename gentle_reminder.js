@@ -37,6 +37,18 @@ app.post('/interactive', function(req, res) {
   res.send(response);
 });
 
+app.post('/requestUserAuth', function(req, res) {
+  console.log("params", req.params);
+  return "okey dokey";
+  /*
+  res.redirect("https://slack.com/oauth/authorize" +
+    "?client_id=" process.env.CLIENT_ID +
+    "&scope=chat:write:user" +
+    "&state=foobar" +
+    "&team=" +
+  */
+});
+
 app.use(express.static(__dirname + '/assets'));
 
 
