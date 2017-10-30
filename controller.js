@@ -60,7 +60,7 @@ Controller.prototype.handleOAuthCallback = function(team, user, code, state) {
 
   console.log('c.hoac');
 
-  if (team_ in this.teamControllers) {
+  if (team in this.teamControllers) {
     this.teamControllers[team].handleOAuthCallback(user, code, state);
   } else {
     console.log('Team not found in team controllers.');
