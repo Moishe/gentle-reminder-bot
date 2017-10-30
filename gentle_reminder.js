@@ -4,6 +4,7 @@ const express = require('express');
 const proxy = require('express-http-proxy');
 const bodyParser = require('body-parser');
 const _ = require('lodash');
+const url = require('url');
 
 // Local classes
 
@@ -53,7 +54,8 @@ app.get('/requestUserAuth/:team/:user', function(req, res) {
 });
 
 app.get('/oauth/:team/:user', function(req, res) {
-  controller.handleOAuthCallback(req.params['team'], req.params['user'], req.query.code, req.query.state, "https://gentle-reminder.herokuapp.com" + req.baseUrl);
+  var path = url.parse(req.url).pathname;
+  controller.handleOAuthCallback(req.params['team'], req.params['user'], req.query.code, req.query.state, "https://gentle-reminder.herokuapp.com" + path);
   res.send('ok');
 });
 
