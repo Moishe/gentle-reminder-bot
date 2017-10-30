@@ -86,16 +86,13 @@ DB.prototype.updateOrAddToken = function(team, user, token) {
                 WHERE up.team_id = updated_tokens.team_id AND up.user_id = updated_tokens.user_id)
         `, team,user, token);
 
-        console.log(query);
-
         self.client.query(query, (err, res) => {
-            console.log('query', err, res);
             if (err) {
                 reject(err);
                 return;
             }
 
-            resolve(res.rows);
+            resolve();
         });
     });
 };
