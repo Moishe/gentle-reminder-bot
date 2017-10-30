@@ -61,10 +61,8 @@ DB.prototype.getSubstitutions = function(team_id) {
 };
 
 DB.prototype.updateOrAddToken = function(team, user, token) {
-    console.log('returning a new promise');
     var self = this;
     return new Promise(function(resolve, reject) {
-        console.log('executing promise');
         var query = self.sprintf(`
             WITH updated_tokens (team_id, user_id, token) as (
                 values

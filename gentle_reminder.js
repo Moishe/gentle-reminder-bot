@@ -48,8 +48,6 @@ app.get('/requestUserAuth/:team/:user', function(req, res) {
         "&state=" + req.params['user'] +
         "&team=" + req.params['team'];
 
-    console.log(url);
-
     res.redirect(url);
 });
 

@@ -34,7 +34,6 @@ Controller.prototype.init = function(slackClient, db){
 Controller.prototype.start = function() {
     var self = this;
     Object.keys(this.teamControllers).forEach(function(key) {
-        console.log('key: ' + key);
         self.teamControllers[key].start();
     });
 };
@@ -57,8 +56,6 @@ Controller.prototype.replace = function(payload) {
 
 Controller.prototype.handleOAuthCallback = function(team, user, code, state, redirect_uri) {
     // TODO validate state
-
-    console.log('c.hoac');
 
     if (team in this.teamControllers) {
         this.teamControllers[team].handleOAuthCallback(user, code, state, redirect_uri);

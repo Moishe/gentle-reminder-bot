@@ -79,9 +79,6 @@ TeamController.prototype.handleMessage = function(m) {
         return this.handleDirectMessage(m);
     }
 
-    console.log('handling message: ', m);
-
-    console.log("users", this.users);
     if (!(m.user in this.users)) {
         return;
     }
@@ -131,7 +128,6 @@ TeamController.prototype.generateAuthLinkForUser = function(team, user) {
 };
 
 TeamController.prototype.handleOAuthCallback = function(user, code, state, redirect_uri) {
-    console.log('tc.hoac');
     var self = this;
     this.web.oauth.access(process.env.CLIENT_ID, process.env.CLIENT_SECRET, code, { redirect_uri: redirect_uri },
         (err, info) => {
@@ -148,7 +144,6 @@ TeamController.prototype.handleOAuthCallback = function(user, code, state, redir
 
             self.db.updateOrAddToken(self.team_id, info['user_id'], info['access_token']).then(function(){
                 self.users[user] = {'team_id': self.team_id, 'user_id': info['user_id'], 'token': info['access_token']};
-                console.log(users);
             });
         });
     return;
@@ -169,8 +164,6 @@ TeamController.prototype.showReplacements = function(m, args) {
 };
 
 TeamController.prototype.showSubscribeLink = function(m, args) {
-    console.log(args);
-    console.log('fia', args.includes('force'));
     if (m.user in this.users && !args.includes('force')) {
         this.web.chat.postMessage(m.channel, "You're already subscribed to gentle reminders! Thank you ❤️", { parse: 'full' });
         return;
