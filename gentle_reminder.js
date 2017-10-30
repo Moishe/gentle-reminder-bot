@@ -53,7 +53,7 @@ app.get('/requestUserAuth/:team/:user', function(req, res) {
 });
 
 app.get('/oauth/:team/:user', function(req, res) {
-  controller.handleOAuthCallback(team, user, req.query.code, req.query.state);
+  controller.handleOAuthCallback(req.params['team'], req.params['user'], req.query.code, req.query.state);
   res.send('ok');
 });
 
