@@ -33,7 +33,7 @@ var controller = new Controller.Controller();
 var db = new DB.DB();
 
 app.post('/interactive', function(req, res) {
-    console.log('query', url.parse(req.url).query);
+    console.log('payload', payload);
     payload = JSON.parse(req.body.payload);
     response = controller.replace(payload);
     res.send(response);
