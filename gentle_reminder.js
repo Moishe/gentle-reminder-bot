@@ -53,7 +53,7 @@ app.get('/requestUserAuth/:team/:user', function(req, res) {
 });
 
 app.get('/oauth/:team/:user', function(req, res) {
-  controller.handleOAuthCallback(req.params['team'], req.params['user'], req.query.code, req.query.state);
+  controller.handleOAuthCallback(req.params['team'], req.params['user'], req.query.code, req.query.state, "https://gentle-reminder.herokuapp.com" + req.originalUrl);
   res.send('ok');
 });
 

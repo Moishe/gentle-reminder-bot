@@ -55,13 +55,13 @@ Controller.prototype.replace = function(payload) {
   return "Thank you! Replaced.";
 };
 
-Controller.prototype.handleOAuthCallback = function(team, user, code, state) {
+Controller.prototype.handleOAuthCallback = function(team, user, code, state, redirect_uri) {
   // TODO validate state
 
   console.log('c.hoac');
 
   if (team in this.teamControllers) {
-    this.teamControllers[team].handleOAuthCallback(user, code, state);
+    this.teamControllers[team].handleOAuthCallback(user, code, state, redirect_uri);
   } else {
     console.log('Team not found in team controllers.');
   }

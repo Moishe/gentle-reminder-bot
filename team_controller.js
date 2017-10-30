@@ -129,10 +129,17 @@ TeamController.prototype.generateAuthLinkForUser = function(team, user) {
     return "https://gentle-reminder.herokuapp.com/requestUserAuth/" + team + "/" + user;
 };
 
-TeamController.prototype.handleOAuthCallback = function(user, code, state) {
-    console.log('tc.hoac');
-    var access = this.web.oauth.access(process.env.CLIENT_ID, process.env.CLIENT_SECRET, code, { redirect_uri: 'https://gentle-reminder.herokuapp.com/oauth' });
-    console.log('access: ', access);
+TeamController.prototype.handleOAuthCallback = function(user, code, state, redirect_uri) {
+    console.log('tc.hoac', redirect_uri);    
+    this.web.oauth.access(process.env.CLIENT_ID, process.env.CLIENT_SECRET, code, { redirect_uri: redirect_uri },
+        (err, res) => {
+            if (err) {
+                console.log('oauth error', err);
+                return;
+            }
+
+            console.log('oauth success', res);
+        });
     return;
 };
 
