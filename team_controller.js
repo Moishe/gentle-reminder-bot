@@ -130,7 +130,7 @@ TeamController.prototype.generateAuthLinkForUser = function(team, user) {
 };
 
 TeamController.prototype.handleOAuthCallback = function(user, code, state, redirect_uri) {
-    console.log('tc.hoac', redirect_uri);    
+    console.log('tc.hoac', redirect_uri);
     this.web.oauth.access(process.env.CLIENT_ID, process.env.CLIENT_SECRET, code, { redirect_uri: redirect_uri },
         (err, res) => {
             if (err) {
@@ -138,7 +138,9 @@ TeamController.prototype.handleOAuthCallback = function(user, code, state, redir
                 return;
             }
 
-            console.log('oauth success', res);
+            // success! Store the new token in the db (either updating an existing row or creating a new one)
+
+            db.updateOrAddToken(this.team_id, user, token);
         });
     return;
 };
