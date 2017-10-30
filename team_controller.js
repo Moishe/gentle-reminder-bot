@@ -81,6 +81,7 @@ TeamController.prototype.handleMessage = function(m) {
 
     console.log('handling message: ', m);
 
+    console.log("users", this.users);
     if (!(m.user in this.users)) {
         return;
     }
@@ -140,7 +141,12 @@ TeamController.prototype.handleOAuthCallback = function(user, code, state, redir
 
             // success! Store the new token in the db (either updating an existing row or creating a new one)
 
-            db.updateOrAddToken(this.team_id, user, token);
+            var self = this;
+            db.updateOrAddToken(this.team_id, user, token).then(function(){
+                console.log('Updated token');
+                self.users[user] = {'team_id': self.team_id, 'user_id': user, 'token': token};
+                console.log(users);
+            });
         });
     return;
 };
