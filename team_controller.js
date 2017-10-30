@@ -142,8 +142,11 @@ TeamController.prototype.handleOAuthCallback = function(user, code, state, redir
 
             // success! Store the new token in the db (either updating an existing row or creating a new one)
 
-            console.log('updating token', info);
-            self.db.updateOrAddToken(self.team_id, user, token).then(function(res){
+            if (self.team_id != info['team_id']) {
+                console.log('Team does not match; ignoring');
+            }
+
+            self.db.updateOrAddToken(self.team_id, info['user_id'], info['access_token']).then(function(res){
                 console.log('Updated token', res);
                 self.users[user] = {'team_id': self.team_id, 'user_id': user, 'token': token};
                 console.log(users);
