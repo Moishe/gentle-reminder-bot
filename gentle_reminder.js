@@ -57,8 +57,13 @@ app.get('/requestUserAuth/:team/:user', function(req, res) {
 
 app.get('/oauth/:team/:user', function(req, res) {
     var path = url.parse(req.url).pathname;
-    controller.handleOAuthCallback(req.params['team'], req.params['user'], req.query.code, req.query.state, "https://gentle-reminder.herokuapp.com" + path);
+    controller.handleOAuthUserCallback(req.params['team'], req.params['user'], req.query.code, req.query.state, "https://gentle-reminder.herokuapp.com" + path);
     res.send('ok');
+});
+
+app.get('/oauth', function(req, res) {
+    var path = url.parse(req.url).pathname;
+    controller.handleOAuthBotCallback(req.query.code, req.query.state, "https://gentle-reminder.herokuapp.com" + path);
 });
 
 app.use(express.static(__dirname + '/assets'));

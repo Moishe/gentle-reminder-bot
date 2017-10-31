@@ -54,14 +54,25 @@ Controller.prototype.replace = function(payload) {
     return "Thank you! Replaced.";
 };
 
-Controller.prototype.handleOAuthCallback = function(team, user, code, state, redirect_uri) {
-    // TODO validate state
-
+Controller.prototype.handleOAuthUserCallback = function(team, user, code, state, redirect_uri) {
     if (team in this.teamControllers) {
         this.teamControllers[team].handleOAuthCallback(user, code, state, redirect_uri);
     } else {
         console.log('Team not found in team controllers.');
     }
+};
+
+Controller.prototype.handleOAuthBotCallback = function(team, user, code, state, redirect_uri) {
+    this.web.oauth.access(process.env.CLIENT_ID, process.env.CLIENT_SECRET, code, { redirect_uri: redirect_uri },
+        (err, info) => {
+            if (err) {
+                console.log('oauth error', err);
+                return;
+            }
+
+            console.log('info', info);
+        });
+    return;
 };
 
 exports.Controller = Controller;
