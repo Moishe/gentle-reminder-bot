@@ -48,7 +48,7 @@ app.get('/requestUserAuth/:team/:user', function(req, res) {
 
     var url = "https://slack.com/oauth/authorize" +
         "?client_id=" + process.env.CLIENT_ID +
-        "&scope=chat:write:user" +
+        "&scope=chat:write:user%20bot" +
         "&redirect_uri=https://gentle-reminder.herokuapp.com/oauth/" + req.params['team'] + "/" + req.params['user'] +
         "&state=" + req.params['user'] +
         "&team=" + req.params['team'];
