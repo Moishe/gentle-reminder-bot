@@ -15,7 +15,6 @@ DB.prototype.init = function(databaseUrl) {
 };
 
 DB.prototype.getBotTokens = function() {
-    console.log('getting bot tokens');
     var self = this;
     return new Promise(function(resolve, reject) {
         self.client.query('SELECT team_id, token FROM bot_tokens', (err, res) => {
@@ -60,7 +59,7 @@ DB.prototype.getSubstitutions = function(team_id) {
     });
 };
 
-DB.prototype.updateOrAddToken = function(team, user, token) {
+DB.prototype.updateOrAddUserToken = function(team, user, token) {
     var self = this;
     return new Promise(function(resolve, reject) {
         var query = self.sprintf(`

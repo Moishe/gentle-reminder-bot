@@ -154,7 +154,7 @@ TeamController.prototype.handleOAuthCallback = function(user, code, state, redir
                 console.log('Team does not match; ignoring');
             }
 
-            self.db.updateOrAddToken(self.team_id, info['user_id'], info['access_token']).then(function(){
+            self.db.updateOrAddUserToken(self.team_id, info['user_id'], info['access_token']).then(function(){
                 self.users[user] = {'team_id': self.team_id, 'user_id': info['user_id'], 'token': info['access_token']};
             });
         });
