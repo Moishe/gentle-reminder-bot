@@ -5,7 +5,13 @@ function TeamController() {
     this.team_id = undefined;
     this.bot_token = undefined;
     this.db = undefined;
-    this.matches = undefined;
+    this.matches = [
+        {
+            'regex': /guys/gi,
+            'alert': "'Guys' isn't gender neutral, so if youre referring to a group of men and women, consider using something else.",
+            'replacements': ["y'all",'comrades','folks']
+        }
+    ];
     this.users = undefined;
 
     this.commands = {

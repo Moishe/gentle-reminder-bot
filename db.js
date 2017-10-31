@@ -59,7 +59,7 @@ DB.prototype.getSubstitutions = function(team_id) {
     });
 };
 
-DB.prototype.updateOrAddBotToken = function(team, user, token) {
+DB.prototype.updateOrAddBotToken = function(team, token) {
     var self = this;
     return new Promise(function(resolve, reject) {
         var query = self.sprintf(`
@@ -81,7 +81,9 @@ DB.prototype.updateOrAddBotToken = function(team, user, token) {
             WHERE NOT EXISTS (SELECT 1
                 FROM upsert up
                 WHERE up.team_id = updated_tokens.team_id)
-        `, team,user, token);
+        `, team, token);
+
+        console.log(query);
 
         self.client.query(query, (err, res) => {
             if (err) {
@@ -118,7 +120,7 @@ DB.prototype.updateOrAddUserToken = function(team, user, token) {
             WHERE NOT EXISTS (SELECT 1
                 FROM upsert up
                 WHERE up.team_id = updated_tokens.team_id AND up.user_id = updated_tokens.user_id)
-        `, team,user, token);
+        `, team, user, token);
 
         self.client.query(query, (err, res) => {
             if (err) {

@@ -23,8 +23,10 @@ Controller.prototype.init = function(slackClient, db){
             return res.reduce(function(sequence, row){
                 tc = new TeamController.TeamController();
                 return sequence.then(function(){
-                    self.teamControllers[row['team_id']] = tc;
-                    return tc.init(self.slackClient, row['team_id'], row['token'], db);
+                    if (row['team_id'][0] == 'T'){
+                        self.teamControllers[row['team_id']] = tc;
+                        return tc.init(self.slackClient, row['team_id'], row['token'], db);
+                    }
                 })
             }, Promise.resolve());
         }).then(function(){ resolve(); });
@@ -78,7 +80,7 @@ Controller.prototype.handleOAuthBotCallback = function(code, state, redirect_uri
             console.log('info', info);
 
             console.log('adding bot token');
-            self.db.updateOrAddBotToken(self.team_id, info['bot']['bot_user_id'], info['bot']['bot_access_token']).then(function(){
+            self.db.updateOrAddBotToken(info['team_id'], info['bot']['bot_access_token']).then(function(){
                 console.log('adding user token');
                 self.db.updateOrAddUserToken(self.team_id, info['user_id'], info['access_token']).then(function(){
                     console.log('creating team controller');
