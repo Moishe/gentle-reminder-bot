@@ -5,6 +5,7 @@ const proxy = require('express-http-proxy');
 const bodyParser = require('body-parser');
 const _ = require('lodash');
 const url = require('url');
+const urlencode = require('urlencode');
 
 // Local classes
 
@@ -44,14 +45,16 @@ app.post('/interactive', function(req, res) {
 });
 
 app.get('/requestUserAuth/:team/:user', function(req, res) {
-    // TODO: sanitize this
-
     var url = "https://slack.com/oauth/authorize" +
-        "?client_id=" + process.env.CLIENT_ID +
+        "?client_id=" + urlencode(process.env.CLIENT_ID) +
         "&scope=chat:write:user%20bot" +
-        "&redirect_uri=https://gentle-reminder.herokuapp.com/oauth/" + req.params['team'] + "/" + req.params['user'] +
-        "&state=" + req.params['user'] +
-        "&team=" + req.params['team'];
+        "&redirect_uri=https://gentle-reminder.herokuapp.com/oauth/" + urlencode(req.params['team']) + "/" + urlencode(req.params['user']) +
+        "&state=" + urlencode(req.params['user']) +
+        "&team=" + urlencode(req.params['team']);
+
+    console.log(url);
+    res.send(url);
+    return;
 
     res.redirect(url);
 });
