@@ -128,6 +128,16 @@ TeamController.prototype.generateAuthLinkForUser = function(team, user) {
 };
 
 TeamController.prototype.handleOAuthCallback = function(user, code, state, redirect_uri) {
+
+    // Our sanity check is that the "state" variable that gets passed back to us is the user that requested
+    // authentication. If that doesn't match the user that is being *granted* authentication, something is
+    // amiss and we should bail!
+
+    if (state != user){
+        console.log(sprintf('User (%s) does not match state (%s), aborting.', user, state));
+        return;
+    }
+
     var self = this;
     this.web.oauth.access(process.env.CLIENT_ID, process.env.CLIENT_SECRET, code, { redirect_uri: redirect_uri },
         (err, info) => {
@@ -135,6 +145,8 @@ TeamController.prototype.handleOAuthCallback = function(user, code, state, redir
                 console.log('oauth error', err);
                 return;
             }
+
+            console.log('info', info);
 
             // success! Store the new token in the db (either updating an existing row or creating a new one)
 

@@ -58,8 +58,6 @@ app.get('/requestUserAuth/:team/:user', function(req, res) {
 
 app.get('/oauth/:team/:user', function(req, res) {
     var path = url.parse(req.url).pathname;
-    console.log('query', url.parse(req.url).query);
-    console.log('url', req.url);
     controller.handleOAuthCallback(req.params['team'], req.params['user'], req.query.code, req.query.state, "https://gentle-reminder.herokuapp.com" + path);
     res.send('ok');
 });
