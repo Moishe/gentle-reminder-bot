@@ -75,12 +75,12 @@ DB.prototype.updateOrAddBotToken = function(team, user, token) {
                 WHERE bot_tokens.team_id = updated_tokens.team_id
                 RETURNING bot_tokens.*
             )
-            INSERT INTO bot_tokens (team_id, user_id, token)
-            SELECT team_id, user_id, token
+            INSERT INTO bot_tokens (team_id, token)
+            SELECT team_id, token
             FROM updated_tokens
             WHERE NOT EXISTS (SELECT 1
                 FROM upsert up
-                WHERE up.team_id = updated_tokens.team_id AND up.user_id = updated_tokens.user_id)
+                WHERE up.team_id = updated_tokens.team_id)
         `, team,user, token);
 
         self.client.query(query, (err, res) => {
