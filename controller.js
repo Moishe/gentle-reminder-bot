@@ -21,7 +21,7 @@ Controller.prototype.init = function(slackClient, db){
     return new Promise(function(resolve, reject) {
         db.getBotTokens().then(function(res) {
             return res.reduce(function(sequence, row){
-                tc = new TeamController.TeamController();
+                var tc = new TeamController.TeamController();
                 return sequence.then(function(){
                     if (row['team_id'][0] == 'T'){
                         self.teamControllers[row['team_id']] = tc;

@@ -49,8 +49,6 @@ TeamController.prototype.init = function(slackClient, team_id, bot_token, db) {
             }).then(function() { resolve(); });
         }).then(function() { resolve(); });
     });
-
-    console.log('matches', matches);
 };
 
 TeamController.prototype.start = function() {
