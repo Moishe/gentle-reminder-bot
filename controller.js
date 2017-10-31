@@ -67,6 +67,7 @@ Controller.prototype.handleOAuthBotCallback = function(code, state, redirect_uri
     // Create a token-less web client just to make the oauth request
     var web = new this.slackClient.WebClient('', { logLevel: 'warning' });
 
+    var self = this;
     web.oauth.access(process.env.CLIENT_ID, process.env.CLIENT_SECRET, code, { redirect_uri: redirect_uri },
         (err, info) => {
             if (err) {
@@ -75,6 +76,21 @@ Controller.prototype.handleOAuthBotCallback = function(code, state, redirect_uri
             }
 
             console.log('info', info);
+
+            console.log('adding bot token');
+            self.db.updateOrAddBotToken(self.team_id, info['bot']['bot_user_id'], info['bot']['bot_access_token']).then(function(){
+                console.log('adding user token');
+                self.db.updateOrAddUserToken(self.team_id, info['user_id'], info['access_token']).then(function(){
+                    console.log('creating team controller');
+                    tc = new TeamController.TeamController();
+                    self.teamControllers[info['team_id']] = tc;
+                    console.log('initializing team controller');
+                    tc.init(self.slackClient, info['team_id'], info['bot']['bot_access_token'], self.db).then(function() {
+                        console.log('starting team controller');
+                        tc.start();
+                    });
+                });
+            });
         });
     return;
 };
