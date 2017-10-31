@@ -27,7 +27,6 @@ TeamController.prototype.init = function(slackClient, team_id, bot_token, db) {
     this.bot_token = bot_token;
     this.db = db;
     this.users = {};
-    this.matches = [];
 
     // load all the matchers and users for this team
 
@@ -50,6 +49,8 @@ TeamController.prototype.init = function(slackClient, team_id, bot_token, db) {
             }).then(function() { resolve(); });
         }).then(function() { resolve(); });
     });
+
+    console.log('matches', matches);
 };
 
 TeamController.prototype.start = function() {
