@@ -63,7 +63,11 @@ Controller.prototype.handleOAuthUserCallback = function(team, user, code, state,
 };
 
 Controller.prototype.handleOAuthBotCallback = function(team, user, code, state, redirect_uri) {
-    this.web.oauth.access(process.env.CLIENT_ID, process.env.CLIENT_SECRET, code, { redirect_uri: redirect_uri },
+
+    // Create a token-less web client just to make the oauth request
+    var web = new this.slackClient.WebClient('', { logLevel: 'warning' });
+
+    web.oauth.access(process.env.CLIENT_ID, process.env.CLIENT_SECRET, code, { redirect_uri: redirect_uri },
         (err, info) => {
             if (err) {
                 console.log('oauth error', err);
