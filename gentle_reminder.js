@@ -52,10 +52,6 @@ app.get('/requestUserAuth/:team/:user', function(req, res) {
         "&state=" + urlencode(req.params['user']) +
         "&team=" + urlencode(req.params['team']);
 
-    console.log(url);
-    res.send(url);
-    return;
-
     res.redirect(url);
 });
 
