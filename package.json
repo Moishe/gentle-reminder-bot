@@ -20,10 +20,10 @@
   "dependencies": {
     "@slack/client": "^3.14.1",
     "body-parser": "^1.18.2",
-    "consolidate": "^0.14.5",
     "express": "^4.16.2",
     "express-http-proxy": "^1.0.7",
     "mustache": "^2.3.0",
+    "mustache-express": "^1.2.5",
     "pg": "7.3.0",
     "sprintf-js": "^1.1.1",
     "urlencode": "^1.1.0"

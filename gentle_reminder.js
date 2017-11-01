@@ -1,9 +1,10 @@
 // 3rd party includes
 
-const express = require('express');
-const proxy = require('express-http-proxy');
-const bodyParser = require('body-parser');
 const _ = require('lodash');
+const bodyParser = require('body-parser');
+const express = require('express');
+const mustacheExpress = require('mustache-express');
+const proxy = require('express-http-proxy');
 const url = require('url');
 const urlencode = require('urlencode');
 
@@ -28,7 +29,16 @@ if (process.env.PROXY_URI) {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/', function(req, res) { res.send('\n 😻😻 ' + bot_name + ' 😻😻 \n'); });
+// Register '.mustache' extension with The Mustache Express
+app.engine('mustache', mustacheExpress());
+
+app.set('views', './views');
+app.set('view engine', 'mustache');
+
+app.get('/', function(req, res) {
+    res.render('index.mustache', { title: 'hello' });
+    //res.send('\n 😻😻 ' + bot_name + ' 😻😻 \n');
+});
 
 var controller = new Controller.Controller();
 var db = new DB.DB();
