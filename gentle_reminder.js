@@ -29,6 +29,8 @@ if (process.env.PROXY_URI) {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(express.static('public'));
+
 // Register '.mustache' extension with The Mustache Express
 app.engine('mustache', mustacheExpress());
 
