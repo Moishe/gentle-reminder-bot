@@ -39,7 +39,6 @@ app.set('view engine', 'mustache');
 
 app.get('/', function(req, res) {
     res.render('index.mustache', { title: 'hello' });
-    //res.send('\n 😻😻 ' + bot_name + ' 😻😻 \n');
 });
 
 var controller = new Controller.Controller();
@@ -70,7 +69,8 @@ app.get('/requestUserAuth/:team/:user', function(req, res) {
 app.get('/oauth/:team/:user', function(req, res) {
     var path = url.parse(req.url).pathname;
     controller.handleOAuthUserCallback(req.params['team'], req.params['user'], req.query.code, req.query.state, "https://gentle-reminder.herokuapp.com" + path);
-    res.send('ok');
+
+    res.render('user_authed.mustache');
 });
 
 app.get('/oauth', function(req, res) {
