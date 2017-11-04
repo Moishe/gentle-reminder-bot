@@ -5,6 +5,7 @@ function TeamController() {
     this.team_id = undefined;
     this.bot_token = undefined;
     this.db = undefined;
+    this.name = undefined;
     this.matches = [
         {
             'regex': /guys/gi,
@@ -71,6 +72,8 @@ TeamController.prototype.init = function(slackClient, team_id, bot_token, db) {
 
 TeamController.prototype.start = function() {
     console.log(sprintf('starting (%s)', this.team_id));
+    var self = this;
+
     this.rtm = new this.slackClient.RtmClient(this.bot_token, { logLevel: 'warning' });
 
     this.rtm.on(this.slackClient.CLIENT_EVENTS.RTM.CONNECTING, function() {
@@ -82,6 +85,7 @@ TeamController.prototype.start = function() {
     });
 
     this.rtm.on(this.slackClient.CLIENT_EVENTS.RTM.AUTHENTICATED, (rtmStartData) => {
+        self.name = rtmStartData.team.name;
         console.log(`Logged in as ${rtmStartData.self.name} of team ${rtmStartData.team.name}`);
     });
 
@@ -92,6 +96,19 @@ TeamController.prototype.start = function() {
 
     this.web = new this.slackClient.WebClient(this.bot_token, { logLevel: 'warning' });
 };
+
+TeamController.prototype.getName = function() {
+    var self = this;
+    return new Promise(function(resolve, reject) {
+        if (!self.name) {
+            self.web.team.info().then(function(info){
+                resolve(info.team.name);
+            });
+        } else {
+            resolve(self.name);
+        }
+    });
+}
 
 TeamController.prototype.handleMessage = function(m) {
     if (m.type != 'message') {

@@ -91,7 +91,6 @@ Controller.prototype.handleOAuthBotCallback = function(code, state, redirect_uri
                         tc.init(self.slackClient, info['team_id'], info['bot']['bot_access_token'], self.db).then(function() {
                             console.log('starting team controller');
                             tc.start();
-                            console.log('resolving.');
                             resolve(tc);
                         });
                     });

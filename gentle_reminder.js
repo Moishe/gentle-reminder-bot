@@ -80,8 +80,9 @@ app.get('/oauth/:team/:user', function(req, res) {
 app.get('/oauth', function(req, res) {
     var path = url.parse(req.url).pathname;
     controller.handleOAuthBotCallback(req.query.code, req.query.state, "https://gentle-reminder.herokuapp.com" + path).then(function(team_controller) {
-        console.log('hello', team_controller);
-        res.render('team_authed.mustache', { team: 'foobar' });
+        tc.getName().then(function(name) {
+            res.render('team_authed.mustache', { team: name });
+        });
     });
 });
 
