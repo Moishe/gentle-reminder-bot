@@ -29,7 +29,7 @@ function TeamController() {
         },
         'unsubscribe': {
             help: 'Unsubscribe from all reminders',
-            fn: TeamController.prototype.showSubscribeLink.bind(this),
+            fn: TeamController.prototype.handleUnsubscribe.bind(this),
         },
         'add': {
             help: 'Add a new reminder for your team',
@@ -224,6 +224,11 @@ TeamController.prototype.showSubscribeLink = function(m, args) {
 };
 
 TeamController.prototype.addReplacement = function(m, args) {
-
+    // TODO: implement this
 };
+
+TeamController.prototype.handleUnsubscribe = function(m, args) {
+    // TODO: implement this
+};
+
 exports.TeamController = TeamController;

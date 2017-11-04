@@ -67,7 +67,7 @@ app.get('/requestUserAuth/:team/:user', function(req, res) {
 });
 
 app.get('/test', function(req, res) {
-    res.render('team_authed.mustache');
+    res.render('team_authed.mustache', {team: 'TEAM NAME'});
 });
 
 app.get('/oauth/:team/:user', function(req, res) {
@@ -79,8 +79,10 @@ app.get('/oauth/:team/:user', function(req, res) {
 
 app.get('/oauth', function(req, res) {
     var path = url.parse(req.url).pathname;
-    controller.handleOAuthBotCallback(req.query.code, req.query.state, "https://gentle-reminder.herokuapp.com" + path);
-    res.send('ok');
+    controller.handleOAuthBotCallback(req.query.code, req.query.state, "https://gentle-reminder.herokuapp.com" + path).then(function(team_controller) {
+        console.log('hello', team_controller);
+        res.render('team_authed.mustache', { team: 'foobar' });
+    });
 });
 
 app.use(express.static(__dirname + '/assets'));
