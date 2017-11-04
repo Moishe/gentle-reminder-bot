@@ -15,9 +15,27 @@ function TeamController() {
     this.users = undefined;
 
     this.commands = {
-        'help': TeamController.prototype.showHelp.bind(this),
-        'replacements': TeamController.prototype.showReplacements.bind(this),
-        'subscribe': TeamController.prototype.showSubscribeLink.bind(this),
+        'help': {
+            help: 'Show this message',
+            fn: TeamController.prototype.showHelp.bind(this),
+        },
+        'replacements': {
+            help: 'Show the list of replacements this bot will suggest',
+            fn: TeamController.prototype.showReplacements.bind(this),
+        },
+        'subscribe': {
+            help: 'Subscribe to reminders',
+            fn: TeamController.prototype.showSubscribeLink.bind(this),
+        },
+        'unsubscribe': {
+            help: 'Unsubscribe from all reminders',
+            fn: TeamController.prototype.showSubscribeLink.bind(this),
+        },
+        'add': {
+            help: 'Add a new reminder for your team',
+            syntax: "  `add` _match_ _suggestion_,_suggestion_,_suggestion_,  eg. `add guys y'all, comrades, folks`",
+            fn: TeamController.prototype.addReplacement.bind(this),
+        },
     };
 }
 
@@ -115,7 +133,7 @@ TeamController.prototype.handleDirectMessage = function(m){
     var args = m.text.split(' ');
     var command = command = args[0].toLowerCase();
     if (command in this.commands){
-        this.commands[command](m, args);
+        this.commands[command].fn(m, args);
     }
 };
 
@@ -167,7 +185,18 @@ TeamController.prototype.handleOAuthCallback = function(user, code, state, redir
 };
 
 TeamController.prototype.showHelp = function(m, args) {
-    this.web.chat.postMessage(m.channel, "help!", {});
+    var helptext = "Welcome to the Gentle Reminder bot. You can send this bot a message via DM, or by using the `/gentlereminder` slash command.\n\n";
+    helptext += "*Commands:*\n";
+
+    for (let command in this.commands) {
+        helptext += "\t`" + command + "`: " + this.commands[command].help + "\n";
+
+        if ('syntax' in this.commands[command]) {
+            helptext += "\t\t" + this.commands[command].syntax + "\n";
+        }
+    }
+
+    this.web.chat.postMessage(m.channel, helptext, {});
 };
 
 TeamController.prototype.showReplacements = function(m, args) {
@@ -194,4 +223,7 @@ TeamController.prototype.showSubscribeLink = function(m, args) {
     this.web.chat.postMessage(m.channel, message);
 };
 
+TeamController.prototype.addReplacement = function(m, args) {
+
+};
 exports.TeamController = TeamController;
