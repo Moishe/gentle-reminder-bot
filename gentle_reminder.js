@@ -66,7 +66,7 @@ app.post('/events', function(req, res) {
         res.send(payload.challenge);
     } else {
         controller.handleEvent(payload);
-        res.send('ok');   
+        res.send('ok');
     }
 });
 
@@ -86,7 +86,7 @@ app.get('/test', function(req, res) {
 });
 
 app.post('/command', function(req, res) {
-    console.log(req.body.payload);
+    console.log(req.body);
     res.send('ok');
 });
 
