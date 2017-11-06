@@ -153,7 +153,7 @@ DB.prototype.removeAllUsersForTeam = function(team) {
     return new Promise(function(resolve, reject) {
         var query = self.sprintf(`
             DELETE FROM user_tokens WHERE team_id='%s'
-        `, team, user);
+        `, team);
 
         self.client.query(query, (err, res) => {
             if (err) {
