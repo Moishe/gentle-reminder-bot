@@ -45,7 +45,7 @@ var controller = new Controller.Controller();
 var db = new DB.DB();
 
 app.post('/interactive', function(req, res) {
-    payload = JSON.parse(req.body.payload);
+    var payload = JSON.parse(req.body.payload);
 
     if (payload.token != process.env.VERIFICATION_TOKEN) {
         console.log('!!! invalid verification token received !!!');
@@ -68,6 +68,12 @@ app.get('/requestUserAuth/:team/:user', function(req, res) {
 
 app.get('/test', function(req, res) {
     res.render('team_authed.mustache', {team: 'TEAM NAME'});
+});
+
+app.post('/command', function(req, res) {
+    var payload = JSON.parse(req.body.payload);
+    console.log(payload);
+    res.send('ok');
 });
 
 app.get('/oauth/:team/:user', function(req, res) {
