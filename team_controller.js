@@ -115,8 +115,6 @@ TeamController.prototype.handleMessage = function(m) {
         return;
     }
 
-    console.log(m);
-
     if (m.channel[0] == 'D'){
         return this.handleDirectMessage(m);
     }
@@ -204,8 +202,8 @@ TeamController.prototype.handleOAuthCallback = function(user, code, state, redir
 };
 
 TeamController.prototype.showHelp = function(m, args) {
-    var helptext = "Welcome to the Gentle Reminder bot. You can send this bot a message via DM, or by using the `/gentlereminder` slash command.\n\n";
-    helptext += "Be sure to invite the bot (with `invite @gentle-reminder`) to any channels in which you'd like reminders.";
+    var helptext = "Welcome to the Gentle Reminder bot. You can send this bot a message via DM, or by using the `/gentlereminder` slash command.\n";
+    helptext += "Be sure to invite the bot (with `/invite @gentle-reminder`) to any channels in which you'd like reminders.\n\n";
     helptext += "*Commands:*\n";
 
     for (let command in this.commands) {
