@@ -57,7 +57,7 @@ app.post('/interactive', function(req, res) {
 
 app.post('/events', function(req, res) {
     console.log(req.body);
-    var payload = JSON.parse(req.body.payload);
+    var payload = JSON.parse(req.body);
     console.log(payload);
 
     if (payload.token != process.env.VERIFICATION_TOKEN) {
