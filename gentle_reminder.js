@@ -65,7 +65,7 @@ app.post('/events', function(req, res) {
     if (payload.type == 'url_verification') {
         res.send(payload.challenge);
     } else {
-        console.log(payload);
+        controller.handleEvent(payload);
         res.send('ok');   
     }
 });

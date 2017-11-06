@@ -148,6 +148,26 @@ DB.prototype.removeUser = function(team, user) {
     });
 };
 
+DB.prototype.removeAllUsersForTeam = function(team) {
+    var self = this;
+    return new Promise(function(resolve, reject) {
+        var query = self.sprintf(`
+            DELETE FROM user_tokens WHERE team_id='%s'
+        `, team, user);
+
+        self.client.query(query, (err, res) => {
+            if (err) {
+                console.log('error: ', err);
+                reject(err);
+                return;
+            }
+
+            console.log(res);
+            resolve();
+        });
+    });
+};
+
 DB.prototype.showUsers = function(team) {
     var self = this;
     return new Promise(function(resolve, reject) {
@@ -165,6 +185,26 @@ DB.prototype.showUsers = function(team) {
             resolve();
         });
     });
-}
+};
+
+DB.prototype.removeTeam = function(team) {
+    var self = this;
+    return new Promise(function(resolve, reject) {
+        var query = self.sprintf(`
+            DELETE FROM bot_tokens WHERE team_id='%s'
+        `, team);
+
+        self.client.query(query, (err, res) => {
+            if (err) {
+                console.log('error: ', err);
+                reject(err);
+                return;
+            }
+
+            console.log(res);
+            resolve();
+        });
+    });
+};
 
 exports.DB = DB;

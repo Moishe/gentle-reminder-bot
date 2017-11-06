@@ -99,4 +99,14 @@ Controller.prototype.handleOAuthBotCallback = function(code, state, redirect_uri
     });
 };
 
+Controller.prototype.handleEvent = function(payload) {
+    if (payload.event && payload.event.type == 'app_uninstalled') {
+        // remove all the user tokens for this team
+        this.db.removeAllUsersForTeam(payload.team_id);
+
+        // remove the team token
+        this.db.removeTeam(payload.team_id);
+    }
+};
+
 exports.Controller = Controller;
