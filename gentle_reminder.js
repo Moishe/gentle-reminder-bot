@@ -56,6 +56,7 @@ app.post('/interactive', function(req, res) {
 });
 
 app.post('/events', function(req, res) {
+    console.log(req.body.payload);
     var payload = JSON.parse(req.body.payload);
     console.log(payload);
 
