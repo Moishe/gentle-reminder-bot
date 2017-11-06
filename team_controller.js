@@ -247,10 +247,10 @@ TeamController.prototype.addReplacement = function(m, args) {
 };
 
 TeamController.prototype.handleUnsubscribe = function(m, args) {
-    console.log('Removing user ', m.user);
-    console.log('From team ', m.team);
     this.db.removeUser(m.team, m.user);
     delete this.users[m.user];
+
+    this.web.chat.postMessage(m.channel, "Thanks for using the gentle reminder bot! You are now unsubsubscribed; you can send `subscribe` to this bot anytime to re-subscribe.");
 };
 
 exports.TeamController = TeamController;
