@@ -204,7 +204,7 @@ TeamController.prototype.handleOAuthCallback = function(user, code, state, redir
 };
 
 TeamController.prototype.showHelp = function(m, args) {
-    var helptext = "Welcome to the Gentle Reminder bot. You can send this bot a message via DM, or by using the `/gentlereminder` slash command.\n";
+    var helptext = "Welcome to the Gentle Reminder bot. You can send this bot a message via DM.\n";
     helptext += "Be sure to invite the bot (with `/invite @gentle-reminder`) to any channels in which you'd like reminders.\n\n";
     helptext += "*Commands:*\n";
 
