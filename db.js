@@ -83,15 +83,11 @@ DB.prototype.updateOrAddBotToken = function(team, token) {
                 WHERE up.team_id = updated_tokens.team_id)
         `, team, token);
 
-        console.log(query);
-
         self.client.query(query, (err, res) => {
             if (err) {
                 reject(err);
                 return;
             }
-
-            console.log(res);
 
             resolve();
         });
@@ -140,7 +136,6 @@ DB.prototype.removeUser = function(team, user) {
             DELETE FROM user_tokens WHERE team_id='%s' AND user_id='%s'
         `, team, user);
 
-        console.log('query', query);
         self.client.query(query, (err, res) => {
             if (err) {
                 console.log('error: ', err);
@@ -148,7 +143,6 @@ DB.prototype.removeUser = function(team, user) {
                 return;
             }
 
-            console.log('success', res);
             resolve();
         });
     });
@@ -161,7 +155,6 @@ DB.prototype.showUsers = function(team) {
             SELECT * FROM user_tokens WHERE team_id='%s'
         `, team);
 
-        console.log('query', query);
         self.client.query(query, (err, res) => {
             if (err) {
                 console.log('error: ', err);
@@ -169,7 +162,6 @@ DB.prototype.showUsers = function(team) {
                 return;
             }
 
-            console.log('success', res);
             resolve();
         });
     });

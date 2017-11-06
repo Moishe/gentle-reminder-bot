@@ -10,7 +10,7 @@ To install on a team:
  - authorize the bot
  - done!
 
-To install for a user:
+To enable for the currently signed-in user:
 --
  - send the message 'subscribe' to the "Gentle Reminder" bot
 
