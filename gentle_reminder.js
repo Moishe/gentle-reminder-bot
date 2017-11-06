@@ -71,8 +71,7 @@ app.get('/test', function(req, res) {
 });
 
 app.post('/command', function(req, res) {
-    var payload = JSON.parse(req.body.payload);
-    console.log(payload);
+    console.log(req.body.payload);
     res.send('ok');
 });
 
