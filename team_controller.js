@@ -81,7 +81,7 @@ TeamController.prototype.start = function() {
     });
 
     this.rtm.on(this.slackClient.CLIENT_EVENTS.RTM.UNABLE_TO_RTM_START, (data) => {
-        console.log('unable to rtm.start: ' + data);
+        console.log('unable to rtm.start:', data);
     });
 
     this.rtm.on(this.slackClient.CLIENT_EVENTS.RTM.AUTHENTICATED, (rtmStartData) => {
@@ -90,7 +90,12 @@ TeamController.prototype.start = function() {
     });
 
     var self = this;
-    this.rtm.on(this.slackClient.RTM_EVENTS.MESSAGE, function(m) { self.handleMessage(m); });
+    this.rtm.on(this.slackClient.RTM_EVENTS.MESSAGE, function(m) {
+        if (m.type == 'app_uninstalled') {
+            console.log('Uninstalled.', m);
+        }
+        self.handleMessage(m);
+    });
 
     this.rtm.start();
 
