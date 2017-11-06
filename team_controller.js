@@ -115,6 +115,8 @@ TeamController.prototype.handleMessage = function(m) {
         return;
     }
 
+    console.log(m);
+
     if (m.channel[0] == 'D'){
         return this.handleDirectMessage(m);
     }
