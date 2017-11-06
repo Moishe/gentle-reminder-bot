@@ -63,7 +63,7 @@ app.post('/events', function(req, res) {
     }
 
     if (payload.type == 'url_verification') {
-        req.send(payload.challenge);
+        res.send(payload.challenge);
     }
 });
 
