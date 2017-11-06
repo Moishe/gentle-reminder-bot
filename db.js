@@ -133,4 +133,46 @@ DB.prototype.updateOrAddUserToken = function(team, user, token) {
     });
 };
 
+DB.prototype.removeUser = function(team, user) {
+    var self = this;
+    return new Promise(function(resolve, reject) {
+        var query = self.sprintf(`
+            DELETE FROM user_tokens WHERE team_id='%s' AND user_id='%s'
+        `, team, user);
+
+        console.log('query', query);
+        self.client.query(query, (err, res) => {
+            if (err) {
+                console.log('error: ', err);
+                reject(err);
+                return;
+            }
+
+            console.log('success', res);
+            resolve();
+        });
+    });
+};
+
+DB.prototype.showUsers = function(team) {
+    var self = this;
+    return new Promise(function(resolve, reject) {
+        var query = self.sprintf(`
+            SELECT * FROM user_tokens WHERE team_id='%s'
+        `, team);
+
+        console.log('query', query);
+        self.client.query(query, (err, res) => {
+            if (err) {
+                console.log('error: ', err);
+                reject(err);
+                return;
+            }
+
+            console.log('success', res);
+            resolve();
+        });
+    });
+}
+
 exports.DB = DB;

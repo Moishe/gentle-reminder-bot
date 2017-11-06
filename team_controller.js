@@ -227,6 +227,8 @@ TeamController.prototype.showReplacements = function(m, args) {
 };
 
 TeamController.prototype.showSubscribeLink = function(m, args) {
+    this.db.showUsers(m.team);
+
     if (m.user in this.users && !args.includes('force')) {
         this.web.chat.postMessage(m.channel, "You're already subscribed to gentle reminders! Thank you ❤️", { parse: 'full' });
         return;
@@ -245,7 +247,10 @@ TeamController.prototype.addReplacement = function(m, args) {
 };
 
 TeamController.prototype.handleUnsubscribe = function(m, args) {
-    // TODO: implement this
+    console.log('Removing user ', m.user);
+    console.log('From team ', m.team);
+    this.db.removeUser(m.team, m.user);
+    delete this.users[m.user];
 };
 
 exports.TeamController = TeamController;
