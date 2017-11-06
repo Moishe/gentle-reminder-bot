@@ -56,9 +56,7 @@ app.post('/interactive', function(req, res) {
 });
 
 app.post('/events', function(req, res) {
-    console.log(req.body);
-    var payload = JSON.parse(req.body);
-    console.log(payload);
+    var payload = req.body;
 
     if (payload.token != process.env.VERIFICATION_TOKEN) {
         console.log('!!! invalid verification token received !!!');
