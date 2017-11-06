@@ -55,6 +55,19 @@ app.post('/interactive', function(req, res) {
     res.send(response);
 });
 
+app.post('/events', function(req, res) {
+    var payload = JSON.parse(req.body.payload);
+    console.log(payload);
+
+    if (payload.token != process.env.VERIFICATION_TOKEN) {
+        console.log('!!! invalid verification token received !!!');
+    }
+
+    if (payload.type == 'url_verification') {
+        req.send(payload.challenge);
+    }
+});
+
 app.get('/requestUserAuth/:team/:user', function(req, res) {
     var url = "https://slack.com/oauth/authorize" +
         "?client_id=" + urlencode(process.env.CLIENT_ID) +

@@ -91,9 +91,6 @@ TeamController.prototype.start = function() {
 
     var self = this;
     this.rtm.on(this.slackClient.RTM_EVENTS.MESSAGE, function(m) {
-        if (m.type == 'app_uninstalled') {
-            console.log('Uninstalled.', m);
-        }
         self.handleMessage(m);
     });
 
